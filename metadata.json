@@ -1,0 +1,6 @@
+{
+  "name": "PDAM HRIS",
+  "description": "Reliable and systematic Human Resource Information System (HRIS) for Municipal Water Utility.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
