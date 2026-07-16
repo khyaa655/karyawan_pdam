@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TabType, Employee, LeaveRequest, PayrollBatch } from './types';
 import { INITIAL_EMPLOYEES, INITIAL_LEAVE_REQUESTS, INITIAL_PAYROLL_BATCHES } from './data';
 
@@ -31,6 +31,33 @@ export default function App() {
   const [employees, setEmployees] = useState<Employee[]>(INITIAL_EMPLOYEES);
   const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>(INITIAL_LEAVE_REQUESTS);
   const [payrollBatches, setPayrollBatches] = useState<PayrollBatch[]>(INITIAL_PAYROLL_BATCHES);
+  // Load persisted state from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('pdam_hris_state');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.employees) setEmployees(parsed.employees);
+        if (parsed.leaveRequests) setLeaveRequests(parsed.leaveRequests);
+        if (parsed.payrollBatches) setPayrollBatches(parsed.payrollBatches);
+        if (parsed.adminName) setAdminName(parsed.adminName);
+        if (parsed.adminRole) setAdminRole(parsed.adminRole);
+      } catch (e) {
+        console.error('Failed to parse persisted HRIS state', e);
+      }
+    }
+  }, []);
+  // Persist state changes to localStorage
+  useEffect(() => {
+    const state = {
+      employees,
+      leaveRequests,
+      payrollBatches,
+      adminName,
+      adminRole,
+    };
+    localStorage.setItem('pdam_hris_state', JSON.stringify(state));
+  }, [employees, leaveRequests, payrollBatches, adminName, adminRole]);
 
   // Modal Visibility States
   const [isAddEmployeeOpen, setIsAddEmployeeOpen] = useState(false);
